@@ -43,6 +43,19 @@ func (d *dbusBase) getStringProperty(iface string) (value string, err error) {
 	return
 }
 
+func (d *dbusBase) getUint32Property(iface string) (value uint32, err error) {
+	prop, err := d.getProperty(iface)
+	if err != nil {
+		return
+	}
+	value, ok := prop.(uint32)
+	if !ok {
+		err = makeVariantTypeError(iface)
+		return
+	}
+	return
+}
+
 func makeVariantTypeError(iface string) error {
 	return fmt.Errorf("unexpected variant type for '%s'", iface)
 }

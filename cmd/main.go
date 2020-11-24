@@ -29,8 +29,16 @@ func main() {
 		var ifname string
 		if ifname, err = d.GetPropertyInterface(); err != nil {
 			log.Error(err)
-		} else {
-			log.Info(ifname)
+			continue
 		}
+
+		var state nmdbus.NMDeviceState
+		if state, err = d.GetPropertyState(); err != nil {
+			log.Error(err)
+			continue
+		}
+
+		log.Info(ifname)
+		log.Info(state)
 	}
 }

@@ -10,35 +10,18 @@ func main() {
 	log.SetLevel(log.DebugLevel)
 
 	var (
-		nmp nmdbus.NetworkManagerProxy
+		sp  nmdbus.SettingsProxy
 		err error
 	)
 
-	nmp, err = nmdbus.NewNetworkManager()
+	sp, err = nmdbus.NewSettings()
 	if err != nil {
-		log.Error("could not initialize NetworkManager: ", err)
+		log.Error("could not initialize Settings: ", err)
 		panic(err)
 	}
 
-	devices, err := nmp.GetDevices()
-	if err != nil {
-		panic(err)
-	}
-
-	for _, d := range devices {
-		var ifname string
-		if ifname, err = d.GetPropertyInterface(); err != nil {
-			log.Error(err)
-			continue
-		}
-
-		var state nmdbus.NMDeviceState
-		if state, err = d.GetPropertyState(); err != nil {
-			log.Error(err)
-			continue
-		}
-
-		log.Info(ifname)
-		log.Info(state)
+	connections, err := sp.ListConnections()
+	for _, conn := range connections {
+		log.Info(conn.GetSettings())
 	}
 }

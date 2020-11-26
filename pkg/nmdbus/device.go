@@ -1,6 +1,8 @@
 package nmdbus
 
-import "github.com/godbus/dbus"
+import (
+	"github.com/godbus/dbus/v5"
+)
 
 const (
 	DeviceInterface = NetworkManagerInterface + ".Device"
@@ -8,6 +10,7 @@ const (
 	/* Properties */
 	DevicePropertyInterface = DeviceInterface + ".Interface"
 	DevicePropertyState     = DeviceInterface + ".State"
+	DevicePropertyMTU       = DeviceInterface + ".Mtu"
 )
 
 type DeviceProxy interface {

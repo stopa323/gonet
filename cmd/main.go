@@ -12,6 +12,7 @@ func main() {
 	var (
 		sp  nmdbus.SettingsProxy
 		err error
+		c   nmdbus.ConnectionProxy
 	)
 
 	sp, err = nmdbus.NewSettings()
@@ -24,4 +25,18 @@ func main() {
 	for _, conn := range connections {
 		log.Info(conn.GetSettings())
 	}
+
+	conSet := nmdbus.ConnectionSettings{
+		"connection": {
+			"id":             "conn-eth-test",
+			"interface-name": "enp0s8",
+			"type":           "802-3-ethernet",
+		},
+	}
+	c, err = sp.AddConnection(conSet)
+	if err != nil {
+		log.Error("failed to create connection: ", err)
+		panic(err)
+	}
+	log.Info(c)
 }

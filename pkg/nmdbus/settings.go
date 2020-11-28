@@ -13,7 +13,7 @@ const (
 
 type SettingsProxy interface {
 	ListConnections() ([]ConnectionProxy, error)
-	AddConnection(ConnectionSettings) (ConnectionProxy, error)
+	AddConnection(ConnectionSettings) error
 }
 
 func NewSettings() (SettingsProxy, error) {
@@ -45,12 +45,11 @@ func (s *settingsProxy) ListConnections() ([]ConnectionProxy, error) {
 	return connections, nil
 }
 
-func (s *settingsProxy) AddConnection(settings ConnectionSettings) (
-	ConnectionProxy, error) {
+func (s *settingsProxy) AddConnection(settings ConnectionSettings) error {
 	var path dbus.ObjectPath
 	err := s.obj.Call(SettingsAddConnection, 0, settings).Store(&path)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return NewConnection(path)
+	return nil
 }

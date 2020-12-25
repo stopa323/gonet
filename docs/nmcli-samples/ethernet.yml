@@ -1,0 +1,40 @@
+# sample output from ethernet connection settings with IPv4 and routes 
+# configured 
+802-3-ethernet:
+  auto-negotiate: false 
+  mac-address-blacklist: [] 
+  mtu: 1666 
+  s390-options: {} 
+connection:
+  autoconnect: false 
+  id: ethernet-enp0s8 
+  interface-name: enp0s8 
+  permissions: [] 
+  type: 802-3-ethernet 
+  uuid: 87097a8d-3343-4df4-828f-af9ef0825623
+ipv4:
+  address-data:
+    - address: "10.20.30.40" 
+      prefix: @u 32
+    - address: "10.0.0.10" 
+      prefix: @u 16
+    - address: "10.0.0.20" 
+      prefix: @u 16
+  addresses: [[673059850 32 0] [167772170 16 0] [335544330 16 0]] 
+  dns: [] 
+  dns-search: [] 
+  method: manual 
+  route-data:
+    - dest: "1.2.3.0" 
+      next-hop: "10.0.0.1" 
+      prefix: @u 24]
+  routes: [[197121 24 16777226 0]]] 
+ipv6:
+  address-data: [] 
+  addresses: [] 
+  dns: [] 
+  dns-search: [] 
+  method: auto 
+  route-data: [] 
+  routes: [] 
+proxy: {}

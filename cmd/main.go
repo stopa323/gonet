@@ -3,6 +3,7 @@ package main
 import (
 	log "github.com/sirupsen/logrus"
 	"github.com/stopa323/gonet/pkg/nm"
+	"github.com/stopa323/gonet/pkg/nm/connection"
 )
 
 func main() {
@@ -10,20 +11,20 @@ func main() {
 	log.SetLevel(log.DebugLevel)
 
 	var (
-		n   *nm.NetworkManager
-		err error
+		netManager *nm.NetworkManager
+		err        error
 	)
 
-	n, err = nm.NewNetworkManager()
+	netManager, err = nm.NewNetworkManager()
 	if err != nil {
 		panic(err)
 	}
 
-	ethConnection := nm.EthernetConnection{
+	ethConnIntent := connection.EthernetConnection{
 		InterfaceName: "enp0s8",
-		MTU:           1900,
+		MTU:           1600,
 	}
-	if err = n.CreateConnection(&ethConnection); err != nil {
+	if err = netManager.Connections.Create(&ethConnIntent); err != nil {
 		panic(err)
 	}
 }

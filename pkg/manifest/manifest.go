@@ -4,23 +4,13 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	"github.com/prometheus/common/log"
+	log "github.com/sirupsen/logrus"
+	obj "github.com/stopa323/gonet/pkg/objects"
 	yaml "gopkg.in/yaml.v3"
 )
 
-type ConnectionType string
-
-const (
-	Ethernet ConnectionType = "Ethernet"
-)
-
-type EthernetConnection struct {
-	InterfaceName string `yaml:"name"`
-	Mtu           uint16 `yaml:"mtu"`
-}
-
 type Manifest struct {
-	EthernetConnections []EthernetConnection
+	Connections []obj.ConnectionBase
 }
 
 func Load(path string) (mft *Manifest, err error) {
@@ -65,9 +55,9 @@ func unmarshalManifest(in []byte) (*Manifest, error) {
 	return &mft, nil
 }
 
-func unmarshalConnection(conn *yaml.Node, out *Manifest) (err error) {
+func unmarshalConnection(conn *yaml.Node, m *Manifest) (err error) {
 	type connectionBase struct {
-		Type ConnectionType `yaml:"type"`
+		Type obj.ConnectionType `yaml:"type"`
 	}
 	var cb connectionBase
 
@@ -77,16 +67,15 @@ func unmarshalConnection(conn *yaml.Node, out *Manifest) (err error) {
 	}
 
 	switch t := cb.Type; t {
-	case Ethernet:
-		var ethConn EthernetConnection
-		err = conn.Decode(&ethConn)
+	case obj.TypeEthernet:
+		var o obj.EthernetConnection
+		err = conn.Decode(&o)
 		if err != nil {
 			return fmt.Errorf("unmarshal ethernet connection: %w", err)
 		}
 
-		out.EthernetConnections = append(out.EthernetConnections, ethConn)
-		log.Debugf("unmarshalled new ethernet connection: %s",
-			ethConn.InterfaceName)
+		m.Connections = append(m.Connections, &o)
+		log.Debugf("unmarshalled new ethernet connection: %s", o.InterfaceName)
 		return
 	default:
 		return fmt.Errorf("unmarshal connection: unknown connection type (%s)", t)

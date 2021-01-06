@@ -1,26 +1,16 @@
-package connection
+package nm
 
 import (
 	"fmt"
 
 	log "github.com/sirupsen/logrus"
 	"github.com/stopa323/gonet/pkg/nm/internal/dbusproxy"
+	obj "github.com/stopa323/gonet/pkg/objects"
 )
-
-type ConnectionType string
-
-const (
-	ConnectionTypeEthernet ConnectionType = "802-3-ethernet"
-)
-
-type ConnectionIntent interface {
-	Serialize() (dbusproxy.ConnectionSettings, error)
-	Name() string
-}
 
 type ConnectionController interface {
 	// Create new connection
-	Create(ConnectionIntent) error
+	Create(obj.ConnectionBase) error
 }
 
 func NewConnectionController() (ConnectionController, error) {
@@ -41,18 +31,15 @@ type connectionController struct {
 	settings dbusproxy.SettingsProxy
 }
 
-func (cc *connectionController) Create(conn ConnectionIntent) error {
-	log.Debugf("creating connection: %s", conn.Name())
-	connSettings, err := conn.Serialize()
+func (cc *connectionController) Create(c obj.ConnectionBase) error {
+	connection, err := SerializeConnection(c)
 	if err != nil {
-		log.Debug(err)
-		return fmt.Errorf("failed to serialize connection: %s", conn.Name())
+		return fmt.Errorf("serialize connection: %w", err)
 	}
 
-	err = cc.settings.AddConnection(connSettings)
+	err = cc.settings.AddConnection(connection)
 	if err != nil {
-		log.Errorf("failed to create connection %s: %s", conn.Name(), err)
-		return err
+		return fmt.Errorf("add connection: %w", err)
 	}
-	return err
+	return nil
 }

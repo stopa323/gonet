@@ -12,6 +12,8 @@ const (
 	SettingsAddConnection = SettingsInterface + ".AddConnection"
 )
 
+type ConnectionSettings map[string]map[string]interface{}
+
 type SettingsProxy interface {
 	AddConnection(ConnectionSettings) error
 }

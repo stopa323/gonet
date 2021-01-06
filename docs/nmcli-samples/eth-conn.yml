@@ -3,6 +3,6 @@ connections:
   - type: Ethernet
     name: enp0s8
     mtu: 1700
-  - type: Ethernet
+  - type: Ethernet2
     name: test-iface
     mtu: 0

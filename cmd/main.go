@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	log "github.com/sirupsen/logrus"
 
 	"github.com/stopa323/gonet/pkg/nm"
@@ -33,7 +35,7 @@ func main() {
 	if e != nil {
 		panic(e)
 	}
-	for _, xxx := range c {
-		log.Info(xxx.Object())
+	for _, c2 := range c {
+		log.Info(fmt.Sprintf("connection details:\n%s", c2.ToString()))
 	}
 }

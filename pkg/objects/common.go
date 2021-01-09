@@ -9,4 +9,5 @@ const (
 type ConnectionBase interface {
 	Type() ConnectionType
 	Object() interface{}
+	ToString() string
 }

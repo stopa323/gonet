@@ -2,7 +2,7 @@ package objects
 
 type EthernetConnection struct {
 	InterfaceName string `yaml:"name"`
-	MTU           uint16 `yaml:"mtu"`
+	MTU           uint32 `yaml:"mtu"`
 }
 
 func (e *EthernetConnection) Type() ConnectionType {

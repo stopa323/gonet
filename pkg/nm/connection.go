@@ -11,6 +11,7 @@ import (
 type ConnectionController interface {
 	// Create new connection
 	Create(obj.ConnectionBase) error
+	List() ([]obj.ConnectionBase, error)
 }
 
 func NewConnectionController() (ConnectionController, error) {
@@ -42,4 +43,32 @@ func (cc *connectionController) Create(c obj.ConnectionBase) error {
 		return fmt.Errorf("add connection: %w", err)
 	}
 	return nil
+}
+
+func (cc *connectionController) List() (
+	connections []obj.ConnectionBase, err error) {
+	var proxyObjects []dbusproxy.ConnectionProxy
+	proxyObjects, err = cc.settings.ListConnections()
+	if err != nil {
+		return nil, fmt.Errorf("list connections: %w", err)
+	}
+
+	for _, connProxy := range proxyObjects {
+		var (
+			settings   dbusproxy.ConnectionSettings
+			connection obj.ConnectionBase
+		)
+		settings, err = connProxy.GetSettings()
+		if err != nil {
+			return nil, fmt.Errorf("get settings: %w", err)
+		}
+		connection, err = DeserializeConnection(settings)
+		if err != nil {
+			log.Warningf("skipping connection: %s", err)
+			continue
+		}
+
+		connections = append(connections, connection)
+	}
+	return connections, nil
 }
